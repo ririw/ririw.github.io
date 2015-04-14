@@ -8,4 +8,3 @@ This is just a little blog I'm starting. I'll aim to get something up once a mon
 
 I hope you like it! 
 
-p.s. Obviously this is weekend work. This weekend has been a little bit too busy, but next weekend I'd like to start in on some deep learning for NLP. 
