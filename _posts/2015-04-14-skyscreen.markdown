@@ -101,7 +101,7 @@ Concluding remarks
 I'll keep this simple:
 
 - Python is slow. There's so much indirection and overhead, it's just not good for performance code
-- But it's libraries are fast! And you probably want them anyway (at least if you're doing numerical code). 
+- But its libraries are fast! And you probably want them anyway (at least if you're doing numerical code). 
   This probably makes it the best bet for writing fast numerical code with good productivity, simply because
   there's so much out there already
 - And sometimes you still need to fall back to C or C++. In the end, the rendering code is in C++, not python.
