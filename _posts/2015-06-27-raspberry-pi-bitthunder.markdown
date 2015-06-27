@@ -68,7 +68,6 @@ int main() {
 	int v = 0;
 
 	while(1) {
-		//BT_kPrint("Welcome to BitThunder");         // I don't care about UART
 		BT_ThreadSleep(250);                          // Wait a quarter second
 		BT_GpioSet(LED_GPIO_ID, v);                   // Set the output high or low
 		v = !v;                                       // and flip the output variable
