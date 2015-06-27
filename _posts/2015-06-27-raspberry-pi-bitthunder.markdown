@@ -95,6 +95,7 @@ With any luck, you'll see the LED blinking. And now you know how to create proje
 
 Notice that only one of them has an SD card. I didn't have two lying around, but once the program is in RAM, it runs happily without the card. Just an interesting difference
 between Linux and a more bare-bones OS. Although that said, Linux doesn't crash right away when you yank the HDD either.
+
 # Troubleshooting
 
 If you had trouble, I've added my own kernel images, that I've confirmed working on my pi. Just decompress onto your SD card.
