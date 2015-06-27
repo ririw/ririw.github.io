@@ -6,7 +6,7 @@ date: Sat Jun 27 17:00:09 AEST 2015
 
 As a part of skyscreen, I've been looking at running a real time operating system on the raspberry pi.
 
-Now, I'm not a developer, so a lot of little tricks were new to me - and I'd guess they're new to you too, so I'll try to document as many of the tricks I used, and hurdles I overcame, to get it to work.
+Now, I'm not an embedded developer, so a lot of little tricks were new to me - and I'd guess they're new to you too, so I'll try to document as many of the tricks I used, and hurdles I overcame, to get it to work.
 
 # Bitthunder
 
