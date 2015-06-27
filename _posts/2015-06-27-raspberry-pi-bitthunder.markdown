@@ -15,7 +15,6 @@ I wanted to use [bitthunder](https://github.com/jameswalmsley/bitthunder) on the
 - Nice docs. Never underestimate the importance of documentation
 - From all his posts, james walmsley, the author, seems like a patient and responsive person! Which will be great when I hit problems later on!
 - A firm base, from RTOS
-- And I'm pretty sure it has network controllers for the pi.
 
 # Building an image
 
