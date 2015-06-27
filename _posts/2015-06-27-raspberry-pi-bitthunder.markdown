@@ -90,8 +90,12 @@ The pi has an interesting boot system. Here's how to upload your file.
 5. That's it! Put it in the pi and boot it!
 
 # Results
-With any luck, you'll see the LED blinking. And now you know where the code goes, in `os/src/bt_main.c`, so get hacking.
+With any luck, you'll see the LED blinking. And now you know how to create projects and get them running, the rest is up to you. Here's a photo of both an A and B model blinking together:
 
+![Blinking]({{ site.url }}/assets/blinky.gif)
+
+Notice that only one of them has an SD card. I didn't have two lying around, but once the program is in RAM, it runs happily without the card. Just an interesting difference
+between Linux and a more bare-bones OS. Although that said, Linux doesn't crash right away when you yank the HDD either.
 # Troubleshooting
 
 If you had trouble, I've added my own kernel images, that I've confirmed working on my pi. Just decompress onto your SD card.
@@ -102,9 +106,4 @@ If you had trouble, I've added my own kernel images, that I've confirmed working
 I also sometimes found uploads would fail. Probably because I didn't have a good SD card, and I never unmounted it properly.
 Anyway, in these cases, copying the image onto the SD card and going again normally did it.
 
-And now, a photo of it working! Working is awesome!
 
-![Blinking]({{ site.url }}/assets/blinky.gif)
-
-Notice that only one of them has an SD card. I didn't have two lying around, but once the program is in RAM, it runs happily without the card. Just an interesting difference
-between Linux and a more bare-bones OS. Although that said, Linux doesn't crash right away when you yank the HDD either.
