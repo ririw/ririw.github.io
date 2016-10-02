@@ -3,7 +3,7 @@ layout: post
 title: "Recommending movies with deep learning"
 date: Sun Sep 25 20:26:07 AEST 2016
 ---
-_Check out the accompanying [notebook]({{site.url}}/assets/Recommending movies.ipynb)_
+_Check out the accompanying [notebook](https://github.com/ririw/ririw.github.io/blob/master/assets/Recommending%20movies.ipynb)_
 
 One of the things I like about deep neural networks and all the accompanying tools, are their flexibility. There's so much more to them than just classification! All it takes is a set of mental shortcuts, that change the way you look at a neural network, and suddenly you start to see many new ways to approach deep learning problems.
 
@@ -96,7 +96,7 @@ As you can see, I take `movie_input` and `user_input`. Both are single numbers, 
 
 Next, I smush them both together with a merge (notice that it's `merge` with a small m). Then I put them through a simple dense neural network, with dropout and batch normalization. Finally I take the result with softmax, and compile it all.
 
-*You also check out the [full notebook]({{site.url}}/assets/Recommending movies.ipynb)*
+*You also check out the [full notebook](https://github.com/ririw/ririw.github.io/blob/master/assets/Recommending%20movies.ipynb)*
 
 # Results
 It does pretty well! I used mean absolute error as my metric, so I could easily compare it to [these stats](http://www.mymedialite.net/examples/datasets.html). Their best result is 0.668 MAE, and after ten rounds of training and a 25% holdout set, I managed to reach 0.669, a little bit above their best effort.
