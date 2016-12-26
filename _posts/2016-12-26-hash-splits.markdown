@@ -36,6 +36,15 @@ A way that I've used in the past goes like this:
 As python code:
 
 {% highlight python %}
+# First, all the imports for the whole example
+from tqdm import tqdm_notebook
+import hashlib
+import pandas
+import scipy.stats
+from sklearn.metrics import mutual_info_score
+import statsmodels.api as sm
+
+
 def ab_split(id, salt, control_group_size):
     '''
     Returns 't' (for test) or 'c' (for control), based on the ID and salt.
@@ -73,16 +82,10 @@ This checks whether we're splitting correctly.
 2. Given some test data, are we seeing random sequences of test and control, rather than have them all bunched up.
 3. Given some test cases, how often does knowing about one AB test tell you something useful about another AB test.
 
-## Checking item 1.
+## Checking item 1
 For this, I ran the test code over 10K IDs, and checked if the proportion of test users was plausible:
 
 {% highlight python %}
-import hashlib
-import pandas
-import scipy.stats
-from sklearn.metrics import mutual_info_score
-import statsmodels.api as sm
-
 # Full example.
 # First, generate the group
 
@@ -108,6 +111,8 @@ We get a proportion of 0.2459, well inside the 95% CI for our expected distribut
 
 ![Probability of observing the count]({{ site.url }}/assets/ab_testing/count_proba.png)
 
+
+## Checking item 2
 The next thing to check is that the order of the `t`s and `c`s appears random. 
 I've been learning about non-parametric statistics recently, and a lot of it is based around run tests.
 They test the randomness of a sequence, by looking at the length of runs of values. 
@@ -116,7 +121,7 @@ Compare these two sequences:
 - `tttttffff`
 - `tttfftfft`
 
-While they both _could_ be random, it seems like the second is "more random" than the first, and if you assume a random process produces the values, the run of five `t`s in the first is very unlikely, more unlikely that the run of length 3 in the second.
+While they both _could_ be random, it seems like the second is "more random" than the first, and if you assume a random process produces the values, the run of five `t`s in the first is very unlikely, more unlikely than the run of length 3 in the second.
 
 There's a tool for testing this in the statsmodels package, `stats.Runs`, which returns the statistic and p-value as a tuple. We're interested in the p-value.
 
@@ -129,32 +134,34 @@ print(sm.stats.Runs((users.test_group == 't').values.astype('int')).runs_test()[
 # Returns 0.455721325515 (no pattern)
 {% endhighlight %} 
 
+## Checking item 3
 The only thing left to check is the most important one: that a person's group in one AB test has no effect on their group in another one.
 
 For this, I've used [mutual information](https://en.wikipedia.org/wiki/Mutual_information), which measures the amount of information you get about a variable from another variable. For example, the mutual information between citizenship and country of residence is high, because generally people are citizens of where they live. In contrast, the mutual infomration between citizenship and whether someone just flipped a heads or tails on a coin is low, because they're unrelated.
 
-For this test, I used 100 different salts, and compared the mutual information between every combination of AB tests:
+For this test, I used 200 different salts, and compared the mutual information between every combination of AB tests:
 
 {% highlight python %}
-mat = log(0.0001 + np.zeros((100, 100)))
+mat = np.zeros((200, 200))
+# Hashing is much slower, so we need a cache to speed it up
 series_cache = {}
 
-for mod1 in tqdm_notebook(range(2, 100)):
-    for mod2 in range(2, 100):
+for mod1 in tqdm_notebook(range(500, 700)):
+    for mod2 in range(500, 700):
         if mod1 in series_cache:
             split1 = series_cache[mod1]
         else:
-            split1 = users.id.apply(lambda id: ab_split(id, 'test%d'%mod1, 0.5)) == 't'
+            split1 = users.id.apply(lambda id: ab_split(id, str(mod1), 0.5)) == 't'
             series_cache[mod1] = split1
             
         if mod2 in series_cache:
             split2 = series_cache[mod2]
         else:
-            split2 = users.id.apply(lambda id: ab_split(id, 'test%d'%mod2, 0.5)) == 't'
+            split2 = users.id.apply(lambda id: ab_split(id, str(mod2), 0.5)) == 't'
             series_cache[mod2] = split2
-        mat[mod1, mod2] = log(0.0001 + abs(split1.mean() - split1[split2].mean()))
-matshow(mat, cmap='viridis')
-title('This just looks like noise to me!')
+        mat[mod1-500, mod2-500] = mutual_info_score(split1, split2)
+mat[np.diag_indices(200)] = np.NaN
+matshow(log(0.001 + mat), cmap='viridis')
 colorbar()
 {% endhighlight %}
 ![mutual info graph]({{ site.url }}/assets/ab_testing/mutual_info.png)
@@ -162,18 +169,27 @@ colorbar()
 In contrast, here's one for the naive modulo arithemetic approach:
 
 {% highlight python %}
-mat = log(0.0001 + np.zeros((100, 100)))
-for mod1 in tqdm_notebook(range(2, 100)):
-    for mod2 in range(2, 100):
+mat = np.zeros((200, 200))
+for mod1 in tqdm_notebook(range(2, 200)):
+    for mod2 in range(2, 200):
         split1 = users.id % mod1 > mod1//2
         split2 = users.id % mod2 > mod2//2
-        mat[mod1, mod2] = log(0.0001 + abs(split1.mean() - split1[split2].mean()))
-matshow(mat, cmap='viridis')
+        mat[mod1, mod2] = mutual_info_score(split1, split2)
+mat[np.diag_indices(200)] = np.NaN
+matshow(log(0.001 + mat), cmap='viridis')
 colorbar()
 {%endhighlight%} 
 ![mutual info graph]({{ site.url }}/assets/ab_testing/mutual_info_mod.png)
 
-As you can see, there are heavy biases in it.
+As you can see, there are heavy biases in it. You can also start to see another issue, on the diagonal in the bottom right, where large mods relative to the number of users mean there's high overlap.
+Here's three images that illustrate this effect. The first two are our 10K users (0-100 on the first line, 100-200 on the next and so on). They colored by test or control, using mods 501 and 503. As you can see, they look quite similar. Even those similarites would even out over a large number of users, for small number of users the splits are quite similar:
+ 
+![mod101]({{ site.url }}/assets/ab_testing/501.png)
+
+And this graph is the same as before, but mods up to 500-600, instead of 0-100, it becomes more obvious:
+
+![mod500600]({{ site.url }}/assets/ab_testing/big_mod_mi.png)
+
 
 # Things to look out for
 When you implement this scheme, here are a few tips:
@@ -184,4 +200,4 @@ When you implement this scheme, here are a few tips:
 3. Test for aggreement in libraries. Put 1 through 1000 through the AB test splitter, on every platform it is used on, and make sure they all agree. Use different salts as well.
 
 # Conclusion
-This hashing approach is nice because it keeps a lot of the advantages of the modulo appraoch, with few of the disadvantages. Hopefully you find the appraoch 
+This hashing approach is nice because it keeps a lot of the advantages of the modulo appraoch, with few of the disadvantages. I hope you find it useful!
