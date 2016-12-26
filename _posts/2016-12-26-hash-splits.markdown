@@ -13,7 +13,7 @@ A common solution to spitting AB tests is to use modulo arithmetic on a user ID.
 This is a common solution for several reasons:
 
 - Very easy to implement. Especially when a test needs to be rolled out ASAP, and there's no existing test infrastructure, it can be tempting to just slap a modulo arithemtic operator in there and call it a day.
-- Memoryless: you don't need to remember how people were assigned, because it's already recorded in their ID and the splitting method.
+- Memoryless: you don't need to save how people were assigned, because it's already recorded in their ID and the splitting method.
 
 _The problem_ with splitting with mods are:
 
@@ -23,13 +23,13 @@ _The problem_ with splitting with mods are:
 
 ## Solving the problem with hashes
 A simple way to solve this is to find another, better way to transform IDs to groups. 
-A way that I've used in the path goes like this:
+A way that I've used in the past goes like this:
 
 1. Take the user ID (or the ID of whatever you're splitting over)
 2. And a salt, unique to the AB test (I use ticket numbers, because they tie things up nicely)
 3. Concatenate them (with a comma or something in between)
 4. Hash them with a hashing algorithm (I use MD5, because it is also present in many DB systems)
-5. Take the last 6 digits of the hashed data, and convert it to an integer
+5. Take the first 6 characters of the hashed data, and convert it to an integer
 6. Divide that integer by the largest 6 digit hex number (`0xffffff`). Be sure to use floating point division.
 7. And then split people using that floating point number. You could also multiply `0xffffff` by a proportion and test for less than or greater than.
 
@@ -113,12 +113,12 @@ I've been learning about non-parametric statistics recently, and a lot of it is 
 They test the randomness of a sequence, by looking at the length of runs of values. 
 Compare these two sequences:
 
-- tttttffff
-- tttfftfft
+- `tttttffff`
+- `tttfftfft`
 
-While they both _could_ be random, it seems like the second is "more random" than the first, and if you assume a random process produces the values, the run of five `t`s in the first is very unlikely, more umlikely that the run of length 3 in the second.
+While they both _could_ be random, it seems like the second is "more random" than the first, and if you assume a random process produces the values, the run of five `t`s in the first is very unlikely, more unlikely that the run of length 3 in the second.
 
-There's a tool for testing this in the statsmodels package, `stats.Runs`, which returns the statistic and p val as a tuple
+There's a tool for testing this in the statsmodels package, `stats.Runs`, which returns the statistic and p-value as a tuple. We're interested in the p-value.
 
 {% highlight python %}
 print(sm.stats.Runs(np.random.choice(2, size=50)).runs_test()[1])
@@ -131,7 +131,7 @@ print(sm.stats.Runs((users.test_group == 't').values.astype('int')).runs_test()[
 
 The only thing left to check is the most important one: that a person's group in one AB test has no effect on their group in another one.
 
-For this, I've use mutual information, which measures the amount of information you get about a variable from another variable. For example, the mutual information between my citizenship and my country of residence is high, because generally people are citizens of where they live. In contrast, the mutual infomration between my citizenship and whether I just flipped a heads or tails on a coin is low, because they're unrelated.
+For this, I've used [mutual information](https://en.wikipedia.org/wiki/Mutual_information), which measures the amount of information you get about a variable from another variable. For example, the mutual information between citizenship and country of residence is high, because generally people are citizens of where they live. In contrast, the mutual infomration between citizenship and whether someone just flipped a heads or tails on a coin is low, because they're unrelated.
 
 For this test, I used 100 different salts, and compared the mutual information between every combination of AB tests:
 
@@ -178,10 +178,10 @@ As you can see, there are heavy biases in it.
 # Things to look out for
 When you implement this scheme, here are a few tips:
 
-1. Watch out for numeric overflow. If you're on a 32 bit system, and you used the first 8 digits of the MD5 sum, you may overflow into negative numbers.
- - Be especially careful when you have _multiple_ systems. The worst thing that can happen is that one system splits one way, and another splits in a different way.
+1. Watch out for numeric overflow. If you're on a 32 bit system, and you use the first 8 digits of the MD5 sum, you may overflow into negative numbers, and throw everything off.
+ - Be especially careful when you have _multiple_ systems. The worst thing that can happen is that one system splits one way, and another splits in a different way, because of differences in the conversions on different platforms.
 2. Even the smallest difference in the salts can totally ruin results. I suggest saving the first 10 or 20 IDs in the split (ie, run numbers 1 through 20 through the AB test function and save the results). This will be invaluable in working out which salt is correct if for some reason there is a proble.
-3. Test for aggreement in libraries. Put 1 through 1000 through the AB test splitter, on every platform it is used on, and make sure they all agree. Use different salts as well. 
+3. Test for aggreement in libraries. Put 1 through 1000 through the AB test splitter, on every platform it is used on, and make sure they all agree. Use different salts as well.
 
 # Conclusion
 This hashing approach is nice because it keeps a lot of the advantages of the modulo appraoch, with few of the disadvantages. Hopefully you find the appraoch 
