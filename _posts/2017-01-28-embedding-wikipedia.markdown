@@ -73,6 +73,19 @@ For starters, the dataset didn't have the word for King, but I tried `queen - wo
 On the other hand, I did try `canada - north + south`, and `new zealand` was quite high up the list.
 And New Zealand is the canada of the south, in many ways. 
 I say this as an Australian.
+{% highlight python %}
+model.most_similar([u'South', u'Canada'], [u'North'])
+[(u'Carmangay', 0.8164716958999634),
+ (u'Andorra_at_the_1976_Summer_Olympics', 0.8036561012268066),
+ (u'Kitscoty', 0.7786150574684143),
+ (u'Montreal', 0.7621344923973083),
+ (u'Coderre,_Saskatchewan', 0.761287271976471),
+ (u'Dewberry,_Alberta', 0.7602828145027161),
+ (u'Falher', 0.7563831806182861),
+ (u'New_Zealand', 0.755115270614624),
+ (u'High_River', 0.7530913352966309),
+ (u'Quebec', 0.7511137127876282)]
+{% endhighlight %}
 
 # Conculsion
 This worked pretty well! I think its value isn't in embedding _wikipedia_, but in embedding other graph-datasets, and embedding them onto a meaningful manifold. In particular, the "similar" query seems to be extremely promising.
