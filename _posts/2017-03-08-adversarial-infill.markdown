@@ -24,15 +24,16 @@ Happy reading!
 ## The generator
 The generator takes an image with a hole in it, and tries to fill in the hole:
 
-
-         INPUT
-    +--------------+
-    |              |
-    |    +----+    |         +----+
-    |    |????|    |   -->   |    |
-    |    +----+    |         +----+
-    |              |
-    +--------------+
+                                       
+         INPUT                         
+    +--------------+                   
+    |              |                   
+    |    +----+    |         +----+    
+    |    |????|    |   -->   |    |    
+    |    +----+    |         +----+    
+    |              |                   
+    +--------------+                   
+                                       
 
 The image is a four channel image. The fourth channel is set to `1` in the missing section, and zero elsewhere.
 
