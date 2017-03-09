@@ -7,10 +7,10 @@ date:   2017-03-08 23:30:00
 # The problem
 
 I've had a lot of time on my hands recently, because my internet has been broken. 
-During that time, I wanted to get familiar with pyTorch, because it's neat.
+During that time, I wanted to become familiar with pyTorch, because it's neat.
 I'm also very interested in GANs and adversarial learning in general. 
-I have trouble getting adversarial learning to work, it's quite fiddly, with [entire pages](https://github.com/soumith/ganhacks) devoted to tips and tricks, including that the GAN objective everyone _writes_ about is not the one they _use_.
-What I wanted to do was to take an image dataset, and see if I could train an adversarial network to fill in missing opatches. 
+I always have trouble getting adversarial learning to work, it's quite fiddly, with [entire pages](https://github.com/soumith/ganhacks) devoted to tips and tricks, including that the GAN objective everyone _writes_ about is not the one they _use_.
+So, with that in mind, I wanted to take the complexity down a notch, by writing an "adversarial infiller", that takes an image with a part missing, and fills in that missing part.
 
 # [The code](https://github.com/ririw/adversarial-infill/blob/master/upscaler/adversarial_upscaling.py)
 
@@ -57,7 +57,7 @@ class Generator(torch.nn.Module):
 
 {% endhighlight %} 
 
-The `x` is the image, and the `missing` is the fourth channel.
+The `x` is the image, and the `missing` is the fourth channel mentioned above.
 
 ## The discriminator
 The disciminator simply takes entire image (both the patch and the context it came from), and predicts whether or not it is real or generated (`1` or `0`)
@@ -85,13 +85,13 @@ class Checker(torch.nn.Module):
 
 ## Side note on pytorch
 
-I've found pytorch to be easier to use than tensorflow. Because the graph is built dynamically, it's a lot easer to debug and fiddle with. I can add print statements to parts of the code. Never underestimate the debugging power of a well placed print statement.
+I've found pytorch to be easier to use than tensorflow. Because the graph is built dynamically, it's a lot easer to debug and fiddle with. I can add print statements to parts of the code, for example.. Never underestimate the debugging power of a well placed print statement.
 
 One thing that did trip me up: pytorch totally lets you do numpy style assignment like this:
 
 `mat[4:6] = [1,2]`
 
-however, this will _not_ gradient propate. Instead, you need to concatenate the data:
+however, this will _not_ propate gradients. Instead, you need to concatenate the data:
 
 `mat_new = torch.cat([mat[:4], [1,2], mat[6:]], 0)`
 
