@@ -13,3 +13,5 @@ markdown: kramdown
 
 gems:
   - jekyll-sitemap
+
+google_analytics: UA-93445004-1
