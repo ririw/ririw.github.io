@@ -15,7 +15,9 @@ Code
 
 Demo: type a subreddit
 ----------------------
-<iframe src='/assets/demo.html' style='width:100%; height:512px;'></iframe>
+This takes a few seconds to load, it needs to pull in the subreddit data.
+
+<iframe src='/assets/demo.html' style='width:100%; height:512px; border: 0'></iframe>
 
 Relevancy scoring
 -----------------
