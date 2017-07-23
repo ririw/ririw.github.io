@@ -6,7 +6,9 @@ date:   2017-07-21 00:00:00
 
 I'm trying a new blog format. 
 I'm going to lay these out light science experiments in high school: hypothesis/experiment/results/discussion.
-We'll see how it goes
+We'll see how it goes.
+
+[The notebook for this project can be found here](https://github.com/ririw/ririw.github.io/blob/master/assets/conditional-wasserstein-gans/Improved.iypnb)
 
 ## Hypothesis
 
