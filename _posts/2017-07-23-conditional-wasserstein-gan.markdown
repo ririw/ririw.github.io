@@ -8,7 +8,7 @@ I'm trying a new blog format.
 I'm going to lay these out light science experiments in high school: hypothesis/experiment/results/discussion.
 We'll see how it goes.
 
-[The notebook for this project can be found here](https://github.com/ririw/ririw.github.io/blob/master/assets/conditional-wasserstein-gans/Improved.iypnb)
+[The notebook for this project can be found here](https://github.com/ririw/ririw.github.io/blob/master/assets/conditional-wasserstein-gans/Improved.ipynb)
 
 ## Hypothesis
 
@@ -88,7 +88,7 @@ During each training step I do the following:
  6. Compute the loss, as mean(sample_review) 
  7. Optimize the generator
  
-[The notebook for this project can be found here](https://github.com/ririw/ririw.github.io/blob/master/assets/conditional-wasserstein-gans/Improved.iypnb)
+[The notebook for this project can be found here](https://github.com/ririw/ririw.github.io/blob/master/assets/conditional-wasserstein-gans/Improved.ipynb)
 
 ## Results
 
