@@ -102,6 +102,10 @@ And the classes of the data:
 
 This means I now have a way to feed in conditions to a WGAN, and really easily generate data conditioned on it.
 
+It's also interesting to look at the scores of the generated points, so these are the "reviews" of the data:
+
+![]({{site_url}}/assets/conditional-wasserstein-gans/plots/points_scores_30000.png)
+
 ## Discussion
 
 This leaves a few open questions:
