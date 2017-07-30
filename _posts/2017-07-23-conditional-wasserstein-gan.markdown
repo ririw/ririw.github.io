@@ -38,7 +38,7 @@ The critic sees the joint distribution of data and condition, so it learns the f
 This is quite easy, and for my experiment I've used data from one of 10 2d Gaussians. 
 Here's the real data-distribution, colored by `y`, the conditional:
 
-![]({{site_url}}/assets/conditional-wasserstein-gans/plots/real.png)
+![]({{site_url}}/assets/conditional-wasserstein-gans/real.png)
 
 The generator's structure is simply:
 
@@ -94,17 +94,17 @@ During each training step I do the following:
 
 This worked great! By the 30-thousandth iteration, the generator was closely matching both the clusters: 
 
-![]({{site_url}}/assets/conditional-wasserstein-gans/plots/points_actual_30000.png)
+![]({{site_url}}/assets/conditional-wasserstein-gans/points_actual_30000.png)
 
 And the classes of the data:
 
-![]({{site_url}}/assets/conditional-wasserstein-gans/plots/points_classes_30000.png)
+![]({{site_url}}/assets/conditional-wasserstein-gans/points_classes_30000.png)
 
 This means I now have a way to feed in conditions to a WGAN, and really easily generate data conditioned on it.
 
 It's also interesting to look at the scores of the generated points, so these are the "reviews" of the data:
 
-![]({{site_url}}/assets/conditional-wasserstein-gans/plots/points_scores_30000.png)
+![]({{site_url}}/assets/conditional-wasserstein-gans/points_scores_30000.png)
 
 ## Discussion
 

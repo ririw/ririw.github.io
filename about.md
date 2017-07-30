@@ -4,19 +4,18 @@ title: About
 permalink: /about/
 ---
 
-My actual name is Richard Weiss. RiRi is just the nickname I've been using pretty much everywhere, forever. 
+My name is Richard Weiss, and I work as Lead Data Data Consultant at Skyfii, in Sydney, Australia.
 
-I'll keep this brief:
+Skyfii is a market leader in WiFi and retail analytics, and we work with large retail clients to develop their data capabilities.
+Our particular focus is extending the sorts of analytics that _online_ properties take for granted to _physical_ retailers.
+I also work with clients to develop general data capabilities and help them to apply data science to real-world problems.
 
-* I'm lead data scientist at Skyfii, a company that provides analytics for the real world, to help improve marketing and operation. I oversee large, sophisticated data projects for clients focusing on:
-  * Data strategy & architecture
-  * Generating insights through sophisticated statistical and big-data techniques,
-  * Guiding clients with data-driven insights 
-* At the moment, I'm interested in
-  * Deep learning
-  * Probabilistic programming
-  * Embedded development
-* I'm also a casual acrobat, when I'm not doing data things.
+Feel free to reach out to me at [richardweiss@richardweiss.org](mailto:richardweiss@richardweiss.org) if you'd like to chat.
+Particularly if you're interested in:
+
+ - Anything I post here
+ - Building the _human_ side of data science, and integrating it into organizations
+ - If you've got a burning analytical question, rather than a vuage need for a data warehouse.
 
 Other links:
  * [Email](mailto:richardweiss@richardweiss.org) - richardweiss@richardweiss.org
