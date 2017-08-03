@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-My name is Richard Weiss, and I work as Lead Data Data Consultant at Skyfii, in Sydney, Australia.
+My name is Richard Weiss, and I work as Lead Data Consultant at Skyfii, in Sydney, Australia.
 
 Skyfii is a market leader in WiFi and retail analytics, and we work with large retail clients to develop their data capabilities.
 Our particular focus is extending the sorts of analytics that _online_ properties take for granted to _physical_ retailers.
