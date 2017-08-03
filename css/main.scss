@@ -50,3 +50,12 @@ $on-laptop:        800px;
         "layout",
         "syntax-highlighting"
 ;
+
+article p {
+	text-align: justify;
+}
+article img {
+	margin-left: auto;
+	margin-right: auto;
+	display: block
+}
