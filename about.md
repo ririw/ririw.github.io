@@ -15,7 +15,7 @@ Particularly if you're interested in:
 
  - Anything I post here
  - Building the _human_ side of data science, and integrating it into organizations
- - If you've got a burning analytical question, rather than a vuage need for a data warehouse.
+ - If you've got a burning analytical question that needs answering.
 
 Other links:
  * [Email](mailto:richardweiss@richardweiss.org) - richardweiss@richardweiss.org
