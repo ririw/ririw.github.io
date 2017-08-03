@@ -1,5 +1,5 @@
 # Site settings
-title: Experiements in data science
+title: Experiments in data science
 email: richardweiss@richardweiss.org
 description: > # this means to ignore newlines until "baseurl:"
    A blog about my experiments in programming & machine learning.
