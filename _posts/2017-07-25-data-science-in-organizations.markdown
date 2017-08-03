@@ -34,7 +34,7 @@ Too many data science projects follow this trajectory, common to other IT projec
  - They start out exciting, and full of promise, with strong buy-in from upper management.
  - Initial prototypes look promising, and the project appears to address an important organizational issue.
  - The project starts to slip, failing to deliver on promises.
- - At the same time, the organization starts to loose interest in the project, and it begins to falter.
+ - At the same time, the organization starts to lose interest in the project, and it begins to falter.
  - The project doesn't fail, but doesn't deliver the organizational change it promised.
 
 This is particularly problematic for data-projects, because they're typically meant to introduce new forms of management or organizational behavior.
