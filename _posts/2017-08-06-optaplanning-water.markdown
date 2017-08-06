@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Using optaplanner to plan water supplies at burning man"
+title: "Using optaplanner to plan water supplies for burning man"
 date:   2017-08-06 00:00:00
 ---
 
