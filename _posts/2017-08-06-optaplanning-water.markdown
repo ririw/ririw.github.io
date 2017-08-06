@@ -71,7 +71,7 @@ Optaplanner also has several important concepts that I'll weave together in my s
 As I was developing it, Optaplanner was pretty good about telling me what I did wrong.
 If you're confused about how a problem fits together, I recommend trying something then working through the error message Optaplanner throws up.
 
-# [The water containers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L184-L196)
+# [The water containers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L180-L192)
 
 The water containers are quite straightforward.
 I use a class structure to keep track of the different types of container.
@@ -100,7 +100,7 @@ class RVGreyWater(nTanks: Int) extends RVContainer(s"rv grey", 28*nTanks, true)
 class RVBlackWater() extends RVContainer("rv black", 21, true)
 {% endhighlight %} 
 
-# [The water use day](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L198-L205)
+# [The water use day](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L194-L201)
 
 
 This object represents a day of water use.
@@ -128,7 +128,7 @@ class WaterUseDay(val day: Int, val waterUse: Double, val greyWater: Double,
 }
 {% endhighlight %}
 
-# [The solution object](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L211-L228)
+# [The solution object](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L207-L224)
 
 A solution object represents an entire problem, both the containers and the days of use.
 There's a lot of sillyness here due to scala/java compatibility issues. 
@@ -235,15 +235,15 @@ I will add a breakdown of things to look at though.
      - [forceRV](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L16-L29) - ensure that we don't carry water barrels in in the RV with EA.
      - [checkGrainExists](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L31-L51) - make sure every day of water goes somewhere
      - [verifyCapacity](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L53-L84) - make sure we don't go over the barrel's capacity
-     - [neatness](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L86-L98) - encourage neat solutions
-     - [ensureNoverlap](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L100-L142) - make sure that the barrels aren't used for fresh water if they're used for grey water.
-     - [discourageBarrelGreyWater](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L144-L148) - while we could use both fresh water barrels for grey water, I'd prefer to keep one clean for next year. This codifies that objective.
-     - [encourageShowers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L150-L159) - this is our only "positive constraint". 
+     - [neatness](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L82-L94) - encourage neat solutions
+     - [ensureNoverlap](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L96-L138) - make sure that the barrels aren't used for fresh water if they're used for grey water.
+     - [discourageBarrelGreyWater](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L140-L144) - while we could use both fresh water barrels for grey water, I'd prefer to keep one clean for next year. This codifies that objective.
+     - [encourageShowers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L146-L155) - this is our only "positive constraint". 
        All the rest deal with things we _don't_ want to happen, but this one basically says that showers are good and to try to fit lots in, by associating showers with positive returns.
-     - [calulateScore](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L161-L170) - find the overall score by adding up all the rules.
-   - [Various containers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L184-L196), as discussed above
-   - [The water use day](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L198-L209), discussed above
-   - [The water problem](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L211-L228), discussed above
+     - [calulateScore](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L157-L166) - find the overall score by adding up all the rules.
+   - [Various containers](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L180-L192), as discussed above
+   - [The water use day](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L194-L201), discussed above
+   - [The water problem](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/WaterProblem.scala#L207-L224), discussed above
 
 ## An example solution
 
