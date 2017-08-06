@@ -4,19 +4,23 @@ title: "Using optaplanner to plan water supplies at burning man"
 date:   2017-08-06 00:00:00
 ---
 
+# Code
+The corresponding code is on [github](https://github.com/ririw/burning-water/tree/post), just run `sbt run` to run it. This blog post is based on the codebase tagged "post".
+
 ## Background
 
 I'm heading to the burn this year. 
 My job in the camp is to handle water logistics, both fresh water and grey water.
-For those who don't know about the burning man, the long and short of it is that it's a party in the desert, with zero infrastructure.
+For those who don't know about the burning man, it's a party in the desert, with zero infrastructure.
 That means you need to plan everything yourself, including water, both brining fresh water in, and moving dirty water out.
 And of course, water is probably the most important element of our planning. 
 Without it, we'll die.
 
-So, I was able to produce a basic water plan, but it was built on multiple assumptions (consumption rates, grey water production rates, etc).
-I wanted to be able to quickly explore my assumptions, and to do so, I want to be able to reach solutions automatically when I change my assumptions.
+So, I was able to produce a basic water plan in excel, but it was built on multiple assumptions (consumption rates, grey water production rates, etc).
+I wanted to be able to quickly challeng my assumptions, and to do so, I want to be able to find good solutions quickly and easily. 
+Excel wouldn't do. 
 
-[Optaplanner](https://www.optaplanner.org/) is a constraint satisfaction solver, meaning I can put in my constraints, and have it produce a solution to them.
+[Optaplanner](https://www.optaplanner.org/) is a constraint satisfaction solver, meaning I enter my constraints, and have it produce a working solution to them.
 By encoding my water problem in it, I'm able to explore the effects of many different situations and contingencies.
 
 I also wanted to provide a really simple introuction to Optaplanner. 
@@ -26,11 +30,11 @@ For this project however, I wanted something simpler and easier.
 ## Background on constraint solving
 
 I've fallen in love with optaplanner. 
-I thinks it's because it's something I can see directly improving my ability to do things, a real jump forward.
+I thinks it's because it's something I can see directly improving my ability to do things: a real jump forward.
 Where previously I'd solve complex planning problems with a spreadsheet, I feel like now I've got a new ability to make a computer do the work for me.
 I also see it being an under appreciated area of business planning.
 For the most part, complex planning solvers are embedded in specific applications, due to the difficulty of developing them.
-With tools like optaplanner, I can see a lot of new applications within businesses and organizations to improve things, without having to develop (or buy) a specialized tool.
+With tools like optaplanner, I can see potential for a lot of new applications within businesses and organizations to improve things, without having to develop (or buy) a specialized tool.
 
 Anyway, constraint solving is basically: 
  > given a set of constraints, find a way to satisfy them.
@@ -41,28 +45,28 @@ Constraint solving is NP-hard in general.
 To model my water problem, I first thought about the constraints:
 
  - Water is stored in 2 water barrels, and in an RV's tank, and in several smaller bottles (for redundancy and convenience)
- - Grey water is to be stored in the RV, and in one of the water tanks once it is empty
+ - Grey water is to be stored in the RV, and in one of the water tanks once it is empty.
  - Once grey water enters a container, it may not be used for fresh water
  - We may not use more water than exists in a container
  - We may not fill a container with grey water above its capacity
- - Neat solutions are preferred, meaning we don't want too many switches of the source
- - We don't want to use both fresh water barrels for grey water
+ - Neat solutions are preferred, so we don't need to change barrels too often.
+ - We'd prefer not to use the fresh water barrels for grey water, because that means we can't use it for fresh water next year.
  - We want to allow showers in the RV.
- - RV showers must draw from the RV water supply, and feed to the RV water tank
- - We would like to have showers
+ - RV showers must draw from the RV water supply, and feed to the RV grey water tank
  - Showers are best if they're around the middle of the burn
 
-There's a lot here, but of course I've built them up slowly.
+There's a lot here, but of course I've built them up incrementally, which is how I suggest you do it as well.
 
-You'll also notice some of these are hard constraints ("may not", "must", etc), that must be satisfied, and soft constraints ("like", "best", etc), which do not.
+You'll also notice some of these are hard constraints ("may not", "must", etc), that must be satisfied, and soft constraints ("like", "best", etc), which do not. 
+Optaplanner recommends using a `HardSoftScore` for this, and it will aim to optimize the hard score over the soft.
 
 Optaplanner also has several important concepts that I'll weave together in my solution:
- - `PlanningEntity` represents something optaplanner will modify to find a solution
- - `PlanningVariable`, a variable optaplanner modifies to find a solution
- - `ValueRangeProvider`, that gives a `PlanningVariable` what values it can take
- - `PlanningEntityCollectionProperty`, that gives optaplanner a set of `PlanningEntity`s to work on
+ - `PlanningEntity` represents something optaplanner will modify to find a solution.
+ - `PlanningVariable`, a variable optaplanner modifies to find a solution.
+ - `ValueRangeProvider`, that gives a `PlanningVariable` a set of possible values.
+ - `PlanningEntityCollectionProperty`, that gives optaplanner a set of `PlanningEntity`s to work on.
  - `PlanningScore`, that tells it where to put the score for a particular solution.
- - `PlanningSolution`, representing a solution to a set of constraints
+ - `PlanningSolution`, representing a solution to a set of constraints.
 
 As I was developing it, Optaplanner was pretty good about telling me what I did wrong.
 If you're confused about how a problem fits together, I recommend trying something then working through the error message Optaplanner throws up.
@@ -83,7 +87,7 @@ I found it easiest to design this as a constraint, rather than modeling transfor
 class WaterContainer(val name: String,
                      val capacity: Double,
                      var isGrey: Boolean) {
-  // All the things optaplanner manipulates need no-args constructors.
+  // Optaplanner often requires a no-args constructor so it can clone and modify things.
   def this() = this(null, 0, true)
 }
 
@@ -101,8 +105,8 @@ class RVBlackWater() extends RVContainer("rv black", 21, true)
 
 This object represents a day of water use.
 I frequently refer to this as a `grain`, which I think is a word I took from optaplanner's docs. 
- - Water consumed (constant)
- - Grey water produced (constant)
+ - Water consumed (given)
+ - Grey water produced (given)
  - Where the water came from (set by optaplanner)
  - Where the grey water goes (set by optaplanner)
  - The number of showers (set by optaplannner) 
@@ -146,7 +150,7 @@ class WaterProblem(val showerTarget: Int,
   @ValueRangeProvider(id = "containers") @ProblemFactCollectionProperty
   val containers: java.util.List[WaterContainer] = _containers.asJava
   @ValueRangeProvider(id = "nshowers")
-  val getDelayRange: CountableValueRange[Integer] = { ValueRangeFactory.createIntValueRange(0, 3)}
+  val showerCapacity: CountableValueRange[Integer] = { ValueRangeFactory.createIntValueRange(0, 3)}
 
   @PlanningEntityCollectionProperty
   val usageGrains: java.util.List[WaterUseDay] = _grains.asJava
@@ -163,9 +167,9 @@ class WaterProblem(val showerTarget: Int,
 
 The scoring is where all the magic happens.
 This was also the most confusing part of the project. 
-The optaplanner docs assume that you're going the distance, and you'll be using their DROOLs planning system. 
+The optaplanner docs assume that you're going all in, and you'll be using their DROOLs planning system. 
 I'm planning on learning how to write the DROOLs rules, but for a simple problem like this, I found them to be more effort than they're probably worth.
-Particularly if you're a new optaplanner user, it's offputting to have to understand a new language, just to write some simple rules.
+Particularly if you're a new user, it's off putting to have to understand a new language, just to write some simple rules.
 
 I'll only show off two of my scoring functions, there were quite a few.
 
@@ -173,9 +177,9 @@ I'll only show off two of my scoring functions, there were quite a few.
 Basically this checks the containers have space! Super duper important!
 It does so by:
 
- 1. Make a mapping, container → capacity
+ 1. Making a mapping, container → capacity
  2. Over each grain, subtract water and grey water use from the corresponding container.
- 3. Find the RV fresh water and the RV grey water tank, because I'll need references to them to do the shower.
+ 3. Find the RV fresh water and the RV grey water containers, because I'll need references to them to do the shower accounting in step 4.
  4. Over each grain, find showers, and appropriately handle their 3GA of water use and grey water production.
 
 You can see it returning a `HardSoftScore`, with soft score zero and hard score set to the problem count, ie, the number of overcapacity containers.
@@ -221,7 +225,7 @@ I will add a breakdown of things to look at though.
 
  - [solverconfig.xml](https://github.com/ririw/burning-water/blob/789520795d0f2f301fd37e5a230d5377207d0aa6/src/main/resources/waterplanner/solverconfig.xml) - this sets up the optaplanner config. 
    It's very simple, all it does is tell optplanner what classes to scan, the name of the scoring class, and the timout on the problem
- - [Main](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/Main.scala) - the entry. 
+ - [Main](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/Main.scala) - the program entry point.
    - [Line 9-34](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/Main.scala#L9-L36): problem setup, with various containers and day-grains, and camp sizes.
    - [Line 36-42](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/Main.scala#L37-L42): instantiating the solver, from the XML config.
    - [Line 43-45](https://github.com/ririw/burning-water/blob/post/src/main/scala/waterplanner/Main.scala#L43-L45): running the solver
@@ -273,7 +277,8 @@ You can see we've satisfied all hard objectives - that's great news!
 In terms of the soft objectives, I'm also happy with how they've all been satisfied.
  - There's good balancing over the tanks,
  - The solution is as neat as I think it could be. 
-   Even the split boxwater makes sense: we need to crack the barrel right away so we can use it all and turn it into a grey water barrel.
+   Even the split boxwater makes sense: we need to crack the fresh water barrel right away so we can use it all and turn it into a grey water barrel.
+   Note that the fresh water barrel arrives with the main group on the first day, rather than going in with EA.
  - And we managed to fit in 6 showers! Great! 
 
 This actually found a better solution than my manual attempt, by moving the box-water use to the start of the period, and thus leaving more water for showers.
