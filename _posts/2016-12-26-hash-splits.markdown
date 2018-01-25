@@ -54,7 +54,7 @@ def ab_split(id, salt, control_group_size):
     test_id = str(id) + '-' + str(salt)
     test_id_digest = hashlib.md5(test_id.encode('ascii')).hexdigest()
     test_id_first_digits = test_id_digest[:6]
-    test_id_first_int = int(test_id_first_digits, 16)
+    test_id_final_int = int(test_id_first_digits, 16)
     ab_split = (test_id_final_int/0xFFFFFF)
     
     if ab_split > control_group_size:
