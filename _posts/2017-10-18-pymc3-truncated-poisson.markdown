@@ -209,7 +209,7 @@ class ZTP(pm.Discrete):
         super().__init__(*args, **kwargs)
         # The mode of the poisson is given by floor(mu), but if this is 
         # zero we use 1 instead as it's the next most-frequent value.
-        self.mode = tt.minimum(tt.floor(mu).astype('int32'), 1)
+        self.mode = tt.maximum(tt.floor(mu).astype('int32'), 1)
         self.mu = mu = tt.as_tensor_variable(mu)
 
     def zpt_cdf(self, mu, size=None):
