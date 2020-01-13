@@ -157,28 +157,28 @@ Implementation details in `udrl.py`
  - The `ReplayBuffer` class tracks episodes
  - The `TrainItem` class represents an item passed to the model to train on
  - The `ModelInterface` is the interface a model must support for the `udrl` code to use it:
-   - `train` takes a list of `TrainItems` and trains the model, and returns nothing
-   - `run` runs the model, this should return something that can be fed into the environment
-   - `random_action` should sample a random action
+    - `train` takes a list of `TrainItems` and trains the model, and returns nothing
+    - `run` runs the model, this should return something that can be fed into the environment
+    - `random_action` should sample a random action
  - The `URLDConfig` class configures the tool
  - An `Episode` represents a full play of the game in question, including 
-   - Actions
-   - Observations
-   - Rewards
-   - The total reward for the episode
-   - Ident: a random integer between 0 and 999, useful for doing train-test splits
+    - Actions
+    - Observations
+    - Rewards
+    - The total reward for the episode
+    - Ident: a random integer between 0 and 999, useful for doing train-test splits
   - `_run_episode` will run a single episode
   - `_run_multi_episodes` will run many episodes
   - `_par_run_episodes` will run many episodes in parallel
   - `_random_fill` will do step 1 of the overall algorithm, using the `random_action` function
   - `_run_model` will do step 4 of the overall algorithm (running the model and tracking episodes)
-   - If configured, this function will write out to tensorboard. Simply pass a `tensorboardX.SummaryWriter` to the `UDRLConfig.writer`
-   - If configured, this function will render the environment. Simply set `render` to true in `UDRLConfig.render`
+    - If configured, this function will write out to tensorboard. Simply pass a `tensorboardX.SummaryWriter` to the `UDRLConfig.writer`
+    - If configured, this function will render the environment. Simply set `render` to true in `UDRLConfig.render`
   - `_train_model` will build a training dataset and pass it to the `train` function of the model
   - `_save_model` will call the function `save_model` if provided in the `URLDConfig`
   - `train_udrl` the main loop. Simply provide:
-   - A function that returns an OpenAI gym compatible environment. This needs to be a factory, rather than an instance, so that multiple instances can be spawned for parallel operation
-   - A `UDRLConfig` instance
+    - A function that returns an OpenAI gym compatible environment. This needs to be a factory, rather than an instance, so that multiple instances can be spawned for parallel operation
+    - A `UDRLConfig` instance
 
 Discussion
 ----------
