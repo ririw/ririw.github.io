@@ -13,6 +13,7 @@ Particularly if you're interested in:
  - Building the _human_ side of data science, and integrating it into organizations
  - If you've got a burning analytical question that needs answering.
 
+
 Other links:
  * [Email](mailto:richardweiss@richardweiss.org) - richardweiss@richardweiss.org
  * [Github](https://github.com/ririw)
